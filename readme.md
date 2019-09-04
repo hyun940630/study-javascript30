@@ -1,3 +1,6 @@
+# Study Vanilla Script30
+#### 2019-09-05
+
 ![](https://javascript30.com/images/JS3-social-share.png)
 
 # JavaScript30
