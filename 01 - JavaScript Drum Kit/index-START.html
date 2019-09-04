@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 
@@ -57,10 +59,61 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <script>
+  
+    /* 1.
+    window.addEventListener('keydown', function(e) {
+      // 'keydown' 이벤트 발생시 해당 키의 코드 값이 콘솔에 찍힘
+      // console.log(e.keyCode);  
 
-</script>
+      // 아래와 같이 .querySelector('audio');의 방식의 접근은 HTML의 class의 접근을 하는 것이다.
+      // const audio = document.querySelector('audio');
+
+      // 하지만 우리는 아래와 같은 방식으로 data-key값에 따라 접근한다.
+      const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+      // keydown event 발생 시 애니메이션을 만든다.
+      const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+      if (!audio) return; // stop the function from running all together.
+
+      // 이 방식은 딜레이를 만든다.
+      // audio.play();
+      // 따라서 아래와 같은 방법을 사용한다.
+      audio.currentTime = 0;  // rewind to the start.
+      audio.play();
+
+      // key 애니메이션을 위해 css를 변경한다. (./style.css에 .playing이라는 css가 있음)
+      // 미리 만들어 놓은 .playing {}을 key 태그가 이벤트를 발생시키면 classList.add를 통해 추가한다.
+      key.classList.add('playing');
+      // key.classList.remove('playing'); // 제거
+      // key.classList.toggle('playing'); // toggle switch
+    });
+    */
+
+    /* 2. refactoring */
+    function playSound(e) {
+      const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+      const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+      if (!audio) return;
+      audio.currentTime = 0;
+      audio.play();
+      key.classList.add('playing');
+    }
+
+    function removeTransition(e) {
+      // transform이 아니라면 함수를 탈출
+      if (e.propertyName !== 'transform') return;  // skip it if it's not a transform.
+  
+      // key의 playing class를 classList에서 제거한다.
+      this.classList.remove('playing');
+    };
+
+    const keys = document.querySelectorAll('.key');
+    keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+    
+    window.addEventListener('keydown', playSound);
+  </script>
 
 
 </body>
+
 </html>
