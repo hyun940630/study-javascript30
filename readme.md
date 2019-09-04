@@ -3,6 +3,9 @@
 
 강좌를 들으며 배우는 내용은 주석을 통해 기록하였습니다.  
   
+  * 영어자막과 설명을 통해 clone coding  
+  * 잘 모르는 함수와 문법은 강의 종료 후 Docs를 통해 학습
+  
 ---
 
 ![](https://javascript30.com/images/JS3-social-share.png)
