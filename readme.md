@@ -1,5 +1,9 @@
 # Study Vanilla Script30
-#### 2019-09-05
+#### Start : 2019-09-05  
+
+강좌를 들으며 배우는 내용은 주석을 통해 기록하였습니다.  
+  
+---
 
 ![](https://javascript30.com/images/JS3-social-share.png)
 
