@@ -9,6 +9,7 @@
 
   <div class="controls">
     <label for="spacing">Spacing:</label>
+    <!-- data-sizing="px"를 통해 input에 가진 value에 데이터 셋을 정의해 준다. -->
     <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
 
     <label for="blur">Blur:</label>
@@ -21,6 +22,28 @@
   <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
 
   <style>
+    /* 구조적 가상 클래스 
+     * 여기서 :root는 HTML 요소 중 가장 상위 요소에 적용한다는 의미이다.
+     * --base: -base라는 css 변수를 설정(변수를 만들고 그 안에 값을 가진다.)
+     */
+    :root {
+      --base: #ffc600;
+      --spacing: 10px;
+      --blur: 10px;
+    }
+
+    /* css: var(지정 변수);
+     * 변수를 불러올 때는 다음과 같이 불러준다.
+     */
+    img {
+      padding: var(--spacing);
+      background: var(--base);
+      filter: blur(var(--blur));
+    }
+
+    .hl {
+      color: var(--base);
+    }
 
     /*
       misc styles, nothing to do with CSS variables
@@ -39,12 +62,43 @@
       margin-bottom: 50px;
     }
 
+    a {
+      color: var(--base);
+      text-decoration: none;
+    }
+
     input {
       width: 100px;
     }
   </style>
 
   <script>
+    // inputs 변수에 controls 클래스 하위의 input 태그를 담는다.
+    const inputs = document.querySelectorAll('.controls input');
+
+    function handleUpdate() {
+      // 함수가 발생하면 inputs가 가지는 value값을 console에서 보여준다.
+      // console.log(this.value);
+
+      // dataset이 지정되지 않았다면 ''(nothing)
+      // 현재 dataset이 px 이기 때문에 color input에는 ''이 된다.
+      const suffix = this.dataset.sizing || '';
+      // dataset의 value를 가져온다.
+      // console.log(suffix);
+      // 해당 input의 name 값을 가져온다.
+      // console.log(this.name);
+
+      // document.documentElement.style을 통해서 document의 최상위 요소의 style에 접근
+      // .setProperty(`--%{this.name}`, this.value + suffix); 를 통해서 해당 name에 접근하고 
+      // 'mousemove'와 'change'에 해당하는 값을 suffix(dataset)과 함께 태그에 넘겨준다.(setting 한다.)
+      // 만약 color 값이 넘어오게 되면 suffix = ''이다.
+      document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix);
+    }
+
+    // 'inputs'에 'change' 이벤트가 발생하면 handleUpdate 함수를 발생시킨다.
+    inputs.forEach(input => input.addEventListener('change', handleUpdate));
+    // 'inputs'에 'mousemove' 이벤트가 발생하면 handleUpdate 함수를 발생시킨다.
+    inputs.forEach(input => input.addEventListener('mousemove', handleUpdate));
   </script>
 
 </body>
