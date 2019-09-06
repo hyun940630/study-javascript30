@@ -22,12 +22,11 @@
     *, *:before, *:after {
       box-sizing: inherit;
     }
-
     .panels {
       min-height: 100vh;
       overflow: hidden;
+      display: flex;
     }
-
     .panel {
       background: #6B0F9C;
       box-shadow: inset 0 0 0 5px rgba(255,255,255,0.1);
@@ -43,21 +42,30 @@
       font-size: 20px;
       background-size: cover;
       background-position: center;
+      flex: 1;
+      justify-content: center;
+      display: flex;
+      flex-direction: column;
     }
-
     .panel1 { background-image:url(https://source.unsplash.com/gYl-UtwNg_I/1500x1500); }
     .panel2 { background-image:url(https://source.unsplash.com/rFKUFzjPYiQ/1500x1500); }
     .panel3 { background-image:url(https://images.unsplash.com/photo-1465188162913-8fb5709d6d57?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&cs=tinysrgb&w=1500&h=1500&fit=crop&s=967e8a713a4e395260793fc8c802901d); }
     .panel4 { background-image:url(https://source.unsplash.com/ITjiVXcwVng/1500x1500); }
     .panel5 { background-image:url(https://source.unsplash.com/3MNzGlQM7qs/1500x1500); }
-
-    /* Flex Children */
+    /* Flex Items */
     .panel > * {
       margin: 0;
       width: 100%;
       transition: transform 0.5s;
+      flex: 1 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-
+    .panel > *:first-child { transform: translateY(-100%); }
+    .panel.open-active > *:first-child { transform: translateY(0); }
+    .panel > *:last-child { transform: translateY(100%); }
+    .panel.open-active > *:last-child { transform: translateY(0); }
     .panel p {
       text-transform: uppercase;
       font-family: 'Amatic SC', cursive;
@@ -68,11 +76,16 @@
     .panel p:nth-child(2) {
       font-size: 4em;
     }
-
     .panel.open {
+      flex: 5;
       font-size: 40px;
     }
-
+    
+    @media only screen and (max-width: 600px) {
+      .panel p {
+        font-size: 1em;
+      }
+    }
   </style>
 
 
@@ -105,10 +118,23 @@
   </div>
 
   <script>
-
+    // panels 변수에 panel 클래스를 가지는 모든 태그를 담는다.
+    const panels = document.querySelectorAll('.panel');
+    function toggleOpen() {
+      console.log('Hello');
+      // panel 클래스에 open 클래스를 추가시킨다. >> open css 발동
+      this.classList.toggle('open');
+    }
+    function toggleActive(e) {
+      console.log(e.propertyName);
+      if (e.propertyName.includes('flex')) {
+        this.classList.toggle('open-active');
+      }
+    }
+    // panel 클래스를 가진 모든 태그는 'click', 'transitioned' 이벤트 발생 시 해당 function을 실행 시킨다.
+    panels.forEach(panel => panel.addEventListener('click', toggleOpen));
+    panels.forEach(panel => panel.addEventListener('transitionend', toggleActive));
   </script>
-
-
 
 </body>
 </html>
