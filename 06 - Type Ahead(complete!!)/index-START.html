@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+  <script>
+    /* 
+     *Fetch API를 이용하면 Request나 Response와 같은 HTTP의 파이프라인을 구성하는 요소를 조작하는 것이 가능하다.
+     * 또한 fetch() 메서드를 이용하는 것으로 비동기 네트워크 통신을 알기 쉽게 기술할 수 있다.
+     * fetchResponsPromise = fetch(resource, init);
+     */
+
+    // 기본적인 사용 방법
+    // fetch('http://example.json/json')
+    //   .then(res => res.json())
+    //   .then(data => data.filter(item => item.isRequired));
+
+    // json
+    const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+    const cities = [];
+
+    fetch(endpoint)
+      .then(blob => blob.json())  // blob는 raw data를 의미하는 parameter
+      .then(data => cities.push(...data));
+
+    function findMatches(wordToMatch, cities) {
+      return cities.filter(place => {
+        // here we need to figure out if the city on state matches what was searched
+        const regex = new RegExp(wordToMatch, 'gi');  // gi: flag로서 g(Global)는 문자열 내의 모든 패턴을 찾고 i(Ignore Case)는 문자열의 대소문자를 구별하지 않는다.
+        return place.city.match(regex) || place.state.match(regex);
+      });
+    }
+
+    function numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');  // g(flag) : Global - 문자열 내의 모든 패턴을 찾는다.
+    } // 참고 http://www.nextree.co.kr/p4327/
+
+    function displayMatches() {
+      // console.log(this.value);
+
+      const matchArray = findMatches(this.value, cities); // this.value = inputSearch에 들어있는 value
+      // console.log(matchArray);
+      const html = matchArray.map(place => {
+        const regex = new RegExp(this.value, 'gi'); 
+        const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
+        const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+        // HTML에 뿌려줄 내용을 정립
+        return `
+          <li>
+            <span class="name"> ${cityName}, ${stateName}</span>
+            <span class="population">${numberWithCommas(place.population)}</span>
+          </li>
+        `;
+      }).join('');  // join(): 배열의 원소들을 연결하여 하나의 값으로 만든다. ('') 안에 원소들을 구분할 다른 문자를 넣는다.
+      suggestions.innerHTML = html;
+    }
+
+    const searchInput = document.querySelector('.search');
+    const suggestions = document.querySelector('.suggestions');
+
+    // searchInput에 'change', 'keyup' 이벤트 발생시 displayMatches function 발생
+    searchInput.addEventListener('change', displayMatches); 
+    searchInput.addEventListener('keyup', displayMatches);
+
+  </script>
+</body>
+
+</html>
