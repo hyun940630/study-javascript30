@@ -31,17 +31,20 @@
   const items = JSON.parse(localStorage.getItem('items')) || [];
 
   function addItem(e) {
+    // event.preventDefault() : 이벤트를 취소할 경우, 이벤트의 전파를 막지않고 그 인벤트를 취소함.
     e.preventDefault();
+    // console.log('hello');  // e.preventDefault()로 인해 console에 hello가 사라지지 않고 남음
     const text = (this.querySelector('[name=item]')).value;
     const item = {
-      text,
+      text,   // ES6 or text : text,
       done: false
     };
 
+    // console.log(item);  // item Objects가 log에 찍힘
     items.push(item);
     populateList(items, itemsList);
     localStorage.setItem('items', JSON.stringify(items));
-    this.reset();
+    this.reset();   // form 안에 있는 모든 엘리먼트의 값을 reset 한다.
   }
 
   function populateList(plates = [], platesList) {
@@ -52,11 +55,12 @@
           <label for="item${i}">${plate.text}</label>
         </li>
       `;
-    }).join('');
+    }).join('');  // .join() : 배열의 모든 요소를 연결해 하나의 문자열로 만듬.
   }
 
   function toggleDone(e) {
-    if (!e.target.matches('input')) return; // skip this unless it's an input
+    if (!e.target.matches('input')) return;   // skip this unless it's an input.
+    // console.log(e.target);
     const el = e.target;
     const index = el.dataset.index;
     items[index].done = !items[index].done;
@@ -66,7 +70,6 @@
 
   addItems.addEventListener('submit', addItem);
   itemsList.addEventListener('click', toggleDone);
-
   populateList(items, itemsList);
 
 </script>
